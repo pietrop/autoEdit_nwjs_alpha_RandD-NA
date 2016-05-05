@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+   <html>
+     <head>
+       <title>autoEdit</title>
+ <script type="text/javascript" src="lib/nativeui.js"></script>
+          <link rel="stylesheet" href="public/css/app.css"></link>
+          <link rel="stylesheet" href="public/css/bootstrap.css"></link>
+          <!-- Dragula to be replaced with lcoal versions in vendor folder -->
+
+          <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.6.8/dragula.min.js'></script> -->
+          <link rel="stylesheet" href="./public/css/dragula.css" media="screen" title="no title" charset="utf-8">
+           <script type="text/javascript" src="vendor/jquery-1.12.0.js"></script>
+<!--<script src="https://code.jquery.com/jquery-git2.min.js"></script>
+  -->
+<script src="./vendor/jquery.multisortable.js"></script>
+<script src="./vendor/jquery-ui.js"></script>
+<script src="./vendor/mousetrap.min.js"></script>
+<script type="text/javascript" src="vendor/bootstrap.js"></script>
+<script type="text/javascript" src="lib/nodemain.js"></script>
+<script type="text/javascript" src="./vendor/videocompositor.js"></script>
+
+    <!--   <script type="text/javascript" src="js/todos.js"></script>
+       <script type="text/javascript" src="js/nativeui.js"></script>
+       <script type="text/javascript" src="js/helpers.js"></script> -->
+       <!-- <link href='./node_modules/dragula/dist/dragula.css' rel='stylesheet' type='text/css' /> -->
+      <!-- <link href='./node_modules/dragula/example/example.css' rel='stylesheet' type='text/css' /> -->
+<!-- <script src="./public/js/dragAndDrop.js"></script> -->
+
+<script src="./vendor/dragula.js" charset="utf-8"></script>
+<link rel="stylesheet" href="./public/css/dragulaCustom.css" media="screen" title="no title" charset="utf-8">
+<!-- <script src="./vendor/dragula.min.js" charset="utf-8"></script> -->
+     </head>
+     <body>
+
+
+
+<!-- test -->
+
+<!--
+https://bevacqua.github.io/dragula/
+Copying stuff from only one of the containers and sorting on the other one? No problem!Copying stuff from only one of the containers and sorting on the other one? No problem! -->
+
+<!-- end test -->
+       <div id="mainView"  class="container-fluid">
+
+        <h1>autoEdit</h1>
+
+       </div>
+
+     </body>
+        <script type="text/javascript" src="lib/main.js"></script>
+        <script src="./lib/videoMetadataReader.js"></script>
+
+
+<input type="file" id="fileDialogSaveEDL" nwsaveas="PaperEdit.edl"  style="display:none"/>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
+    <!-- Latest compiled and minified JavaScript -->
+
+       <script>
+
+        // Tabs
+
+        $('#myTabs a').click(function (e) {
+          e.preventDefault()
+          $(this).tab('show')
+        });
+        $('#myTabs a:first').tab('show');
+
+        // require('nwjs-osx-menu')(window);
+        // var path = require('path');
+        // var dirname = require('../util.js').dirname;
+
+        /////////////Video ///////////
+        /**
+        *
+        */
+        var videoM ;
+
+      // function videoShow(elem){
+      //   document.getElementById('mainView').innerHTML= myApp.videoView(elem.id);
+
+      //   initialiseInteractivity();
+      // }
+
+      function readMetadata(elem){
+        readVideoMetadata(elem.value, function(videoMeta){ console.log(videoMeta)
+          populateVideoMetadataFrom(videoMeta);
+          // videoMeta.fileName = videoMeta.filePathName.split('/')[]
+           videoM = videoMeta;
+        });
+      }
+
+      //
+      function populateVideoMetadataFrom(details){
+        // document.getElementById('inputVideoDate').value = details.date;
+        // document.getElementById('inputVideoReelName').value = details.ReelName;
+
+        setIput('inputVideoFileName', details.filePathName);
+        setIput('inputVideoDate', details.date);
+        setIput('inputVideoReelName', details.reelName);
+        setIput('inputVideoTimecode', details.timecode);
+        setIput('inputVideoTimebase', details.fps);
+        setIput('inputVideoDuration', details.duration);
+
+      }
+
+      function setIput(elem,value){
+        document.getElementById(elem).value = value;
+      }
+
+      function getInput(elem){
+        return document.getElementById(elem).value;
+      }
+
+      function saveVideo(elem){
+         videoM.name = getInput('inputVideoTranscriptName');
+         videoM.description = getInput('textAreaVideoDescription')
+         videoM.paperedit = getSelectedPaperedit();
+         videoM.srtFile =getInput('srtFile')
+
+
+         // myApp.video.transcodeToOgg(videoM.name, function(data){
+           //Save in app db
+           // console.log(data);
+           var v = new myApp.video();
+           // videoM.oggFilePath = data;
+           v.setDetails(videoM);
+           v.save();
+
+         // });
+
+         alert('video has been saved');
+         // alert(v._id)
+        document.getElementById('mainView').innerHTML = myApp.videosView();
+         // return videoM;
+      }
+
+     function getSelectedPaperedit(){
+        var e = document.getElementById('selectPaperEdit');
+        var pe = e.options[e.selectedIndex].value;
+        // console.log(pe);
+        return pe;
+      }
+
+      //////////////Paperedit/////////
+      var papereditM ;
+
+       function getSelectedVideos(){
+        var selected1 = [];
+        var select1 = document.getElementById('selectVideos');
+        // var pe = e.options[e.selectedIndex].value;
+        for (var i = 0; i < select1.length; i++) {
+          if (select1.options[i].selected){
+            selected1.push(select1.options[i].value);
+          }
+        }
+        console.log(selected1);
+
+        return selected1;
+        // return pe;
+      }
+
+      function savePaperEdit(elem){
+        // papereditM ={};
+         var name = getInput('inputPaperEditName');
+         var description = getInput('textAreaPapereditDescription');
+         // var videosIDs = [];
+         var videosIDs = getSelectedVideos();
+
+
+         //Save in app db
+         var p = new myApp.paperedit( name, description, videosIDs )
+         // v.setDetails(videoM);
+         p.save();
+         //
+         alert('Paperedit has been saved');
+         // alert(v._id)
+        document.getElementById('mainView').innerHTML = myApp.paperEditsView();
+      }
+
+
+      function papereditShow(elem){
+        document.getElementById('mainView').innerHTML= myApp.papereditView(elem.id);
+        //opens tab to first one to avoid showing all the divs at once
+        $('#myTabs a:first').tab('show') ;
+        initialiseDragAndDrop();
+        addPapereditKeyboardShortcuts();
+
+        initialiseInteractivity();
+        initialiseCliccableWords();
+      }
+
+//selection
+// http://www.quirksmode.org/dom/range_intro.html
+
+// userSelection = window.getSelection();
+// // alert(userSelection);
+
+// var rangeObject = getRangeObject(userSelection);
+
+// function getRangeObject(selectionObject) {
+
+//     return selectionObject.getRangeAt(0);
+// }
+
+// document.getElementById('paperedit').innerHTML = rangeObject;
+
+/**
+* Drag and drop multi
+*/
+
+function initialiseDragAndDrop(){
+
+
+  // $( ".transcription" ).mousedown(function() {
+  //   // alert( "Handler for .mousedown() called." );
+  //    if (window.getSelection) {
+  //     if (window.getSelection().empty) {  // Chrome
+  //       window.getSelection().empty();
+  //     } else if (window.getSelection().removeAllRanges) {  // Firefox
+  //       window.getSelection().removeAllRanges();
+  //     }
+  //   } else if (document.selection) {  // IE?
+  //     document.selection.empty();
+  //   }
+  //
+  //   //remove selection
+  //
+  // });
+
+  //////////selection////
+$(".transcription").mouseup(function() {
+
+  if (true) {
+    //REMOVE USER SELECTION
+      //  if (window.getSelection) {
+      //   if (window.getSelection().empty) {  // Chrome
+      //     window.getSelection().empty();
+      //   } else if (window.getSelection().removeAllRanges) {  // Firefox
+      //     window.getSelection().removeAllRanges();
+      //   }
+      // } else if (document.selection) {  // IE?
+      //   document.selection.empty();
+      // }
+    //CLEAR
+  }
+
+  $( "#left" ).replaceWith($("#left").children().children().unwrap());
+          var selection;
+          console.log("selection made");
+          if (window.getSelection) {
+              selection = window.getSelection();
+          } else if (document.selection) {
+              selection = document.selection.createRange();
+          }
+
+
+
+          // var range = window.getSelection().getRangeAt(0),
+          //   content = range.extractContents(),
+          //      span = document.createElement('SPAN');
+
+          // var rangeObject = getRangeObject(selection);
+          //         function getRangeObject(selectionObject) {
+          //             if (selectionObject.getRangeAt)
+          //                 return selectionObject.getRangeAt(0);
+          //             else { // Safari!
+          //                 var range = document.createRange();
+          //                 range.setStart(selectionObject.anchorNode,selectionObject.anchorOffset);
+          //                 range.setEnd(selectionObject.focusNode,selectionObject.focusOffset);
+          //                 return range;
+          //             }
+          //         }
+
+  var selection= window.getSelection().getRangeAt(0);
+   var selectedText = selection.extractContents();
+   var mainDiv = document.createElement("div");
+   var selectionDiv= document.createElement("div");
+   mainDiv.style.backgroundColor = "lightgreen";
+   mainDiv.id ="left";
+   selectionDiv.appendChild(selectedText);
+   mainDiv.appendChild(selectionDiv);
+   selection.insertNode(mainDiv);
+
+//REMOVE USER SELECTION
+   if (window.getSelection) {
+    if (window.getSelection().empty) {  // Chrome
+      window.getSelection().empty();
+    } else if (window.getSelection().removeAllRanges) {  // Firefox
+      window.getSelection().removeAllRanges();
+    }
+  } else if (document.selection) {  // IE?
+    document.selection.empty();
+  }
+//CLEAR
+
+  makeDraggableDragula("left","paperedit");
+})
+  /////////end selection//////
+
+  // makeDraggableDragula("left","right");
+
+
+
+  // var numberOfTranscripts = $('article.transcription').size();
+  //     $('article.sortable.transcription, article.sortable#paperedit').multisortable({
+  //       items: "span",
+  //       click: function(e){
+  //        // console.log("I'm selected.");
+  //       },
+  //       stop: function (e) {
+  //         //Here should save paperedit/papercuts
+  //       console.log("e stop --------------")
+  //       console.log(e)
+  //       $(e).wrap( "<p></p>" );
+  //       }
+  //     });
+  //   $('article.sortable.transcription').sortable('option', 'connectWith', 'article#paperedit');
+  //   $('article#paperedit').sortable('option', 'connectWith', 'article#paperedit');
+
+
+}
+
+
+
+function addPapereditKeyboardShortcuts(){
+      /**
+    * keyboard shortcut using mouse trap to make selection transcript to paperEdit
+    * select words shift+click to select multiple faster.
+    * cmd+right, be default they are dropped, at end of Main heading
+    * https://craig.is/killing/mice
+    */
+    Mousetrap.bind('command+right', function (e) {
+        //need to select transcript in focus for shortcut to work properly
+        //encapsulate keybind in function and pass transcript to it?
+        // var transcriptSelection = document.getElementById("transcription37c3ff430ee8411fa8281132e4b76b8b");
+        var selection = document.getElementsById("left");
+       // $( ".selected" ).wrap( "<p></p>" );
+        var paperedit = document.getElementById("paperedit");
+        //append words in transcript selection to paperEdit
+        var nodesToMove = [];
+        for (var i = 0; i <= selection.length; i++) {
+            nodesToMove.push(selection[i]);
+
+        }
+
+
+
+        for (var i = 0; i <= nodesToMove.length; i++) {
+            // $(nodesToMove[i]).insertBefore("#concl");
+            paperedit.appendChild(nodesToMove[i]);
+        }
+        //make ajax call
+        //console.log(papercuts);
+        return false;
+    });
+ }
+
+/**
+* function to delete papredit /papercuts span seleciton
+*/
+ function deleteSelection(){
+  var selection = document.getElementsByClassName('selected');
+
+      counter = selection.length;
+
+      while(counter >0 ){
+        selection[0].remove();
+      }
+
+      //TODO: needs to update paperedit/papercuts.
+   }
+
+/**
+* Takes the span word elements in
+*/
+   function getPaperEditWordsJSON(preview){
+
+       var nOfWords =  $('article#paperedit span').size();
+       var sequence =[];
+       for(var i=0; i< nOfWords; i++){
+          var video = {};
+          video.id = i+1;
+          // video.start  = 0;
+          video.originalSrc = $('article#paperedit span')[i].getAttribute("transcriptionsrc");
+
+          // if(preview){
+              //preview uses ogg html5 video to show preview locally
+             if (preview == true){
+            video.src = "./"+$('article#paperedit span')[i].getAttribute("oggFilePath");
+              //false, uses original source to make for EDL
+            }else{
+               video.src = "./"+$('article#paperedit span')[i].getAttribute("transcriptionsrc");
+            }
+          // }
+
+
+          video.type="video";
+          var inTc = parseFloat($('article#paperedit span')[i].getAttribute("tcin"));
+          var outTc = parseFloat($('article#paperedit span')[i].getAttribute("tcout"));
+          video.tcin = inTc;
+          video.tcout = outTc;
+          video.duration = outTc - inTc;
+          video.sourceStart =  parseFloat($('article#paperedit span')[i].getAttribute("tcin"));
+
+            // if(i == 0 ){
+            //   video.start  = 0;
+            // } else{
+            //   video.start = sequence[i-1].duration +sequence[i-1].start;
+            // }
+          sequence.push(video);
+       }
+       // console.log(JSON.stringify(sequence))
+       return sequence;
+   }
+
+/*
+* Rounding to nearest integer number of frames
+*/
+function roundToIntFps(numberToRound){
+    fps = 25;
+    result  = (Math.round(numberToRound*fps))/fps;
+    return result;
+}
+
+
+//helper methods
+function merge2ContiguosSegments(one, two){
+  two.sourceStart = one.sourceStart;
+  two.duration +=one.duration;
+  return two;
+}
+/**
+* Merges contiguos elements
+* TODO: not working properly needs to test and
+* check all use cases.
+*/
+function concatContiguosWords(preview){
+  var sequence =  getPaperEditWordsJSON(preview);
+  var result = myApp.convertToEDLJson(sequence);
+  return result;
+}
+
+
+function makePlaylist(){
+  var playlist = {}
+  playlist.tracks = [];
+  playlist.tracks.push(concatContiguosWords(true));
+
+  console.log(playlist);
+ return playlist;
+}
+
+function getPlaylist(){
+  // var playlist =  {
+  //       "tracks":[
+  //                   [
+  //                     {type:"video", sourceStart:0.01, start:3.00, duration:2.01, src:"./media/Clip16.ogg", id:"1"},
+  //                     {type:"video", sourceStart:20.01000000000000000005, start:5.02, duration:6.01, src:"./media/debate_test.ogg", id:"2"},
+  //                      {type:"video", sourceStart:30.01, start:11.03, duration:6.01, src:"./media/debate_test.ogg", id:"3"}
+  //                   ]
+  //               ]
+  //     };
+  var playlist = makePlaylist();
+      return playlist;
+}
+
+
+var videoCompositor;
+
+function playPapereditPreview(){
+
+  canvas = document.getElementById('player-canvas');
+  videoCompositor = new VideoCompositor(canvas);
+  videoCompositor.playlist = getPlaylist();
+  videoCompositor.play();
+  playingPreview = true;
+
+}
+
+// function stopPapereditPreview(){
+//    videoCompositor.pause();
+//     canvas = document.getElementById('player-canvas');
+//  videoCompositor = new VideoCompositor(canvas);
+// videoCompositor.playlist = getPlaylist();
+// }
+
+
+function pausePapereditPreview(){
+  videoCompositor.pause();
+}
+
+
+
+function saveEDLfile(){
+  document.getElementById('fileDialogSaveEDL').click();
+  document.getElementById("fileDialogSaveEDL").onchange = function(){
+
+
+    myApp.writeEDLfile(this.value, concatContiguosWords(false));
+     alert("saved in: "+this.value);
+  }
+
+
+}
+
+
+
+
+function initialiseInteractivity(){
+/* *
+* HyperTranscript Search function
+* Word accurate, highlights the line in yellow, and makes matched word bold.
+* It does so by switching CSS classes.
+* */
+/////////////////////////// word accurate search///////////////////////////////////
+    $("#search-criteria").keypress(function(){
+        var txt = $('#search-criteria').val();
+        console.log(txt);
+        if (txt == ""){
+            $( '.child' ).css( "background-color", "" );
+            $( '.child' ).css( "color", "" );
+            $( '.child' ).css( "color", "" );
+            $( '.child' ).css( "font-weight", "" );
+        }else {
+            $( '.child' ).css( "background-color", "" );
+            $( '.child' ).css( "color", "" );
+            $( '.child' ).css( "font-weight", "" );
+            $( '.child:contains("'+txt+'")' ).css( "background-color", "yellow" );
+            $( '.child:contains("'+txt+'")' ).css( "color", "black" );
+            $( '.child:contains("'+txt+'")' ).css( "font-weight", "bold" );
+        }
+    });
+    $("#search-criteria").keyup(function(){
+        var txt = $('#search-criteria').val();
+        console.log(txt);
+        if (txt === ""){
+            $( '.child' ).css( "background-color", "" );
+            $( '.child' ).css( "color", "" );
+            $( '.child' ).css( "color", "" );
+            $( '.child' ).css( "font-weight", "" );
+        }else {
+            $( '.child' ).css( "background-color", "" );
+            $( '.child' ).css( "color", "" );
+            $( '.child' ).css( "font-weight", "" );
+            $( '.child:contains("'+txt+'")' ).css( "color", "black" );
+            $( '.child:contains("'+txt+'")' ).css( "background-color", "yellow" );
+            $( '.child:contains("'+txt+'")' ).css( "color", "black" );
+            $( '.child:contains("'+txt+'")' ).css( "font-weight", "bold" );
+        }
+    });
+/////////////////////end  word accurate search///////////////////////////////////
+
+// //////////////////////////////////////////////////////////
+// //CLICKABLE WORDS/SPAN TAG
+// var makewordClickVideo = function(wordClass,videoId){
+//   // clickable words/span tag
+//   var words = document.getElementsByClassName(wordClass);
+//     var transcriptVideo = document.getElementById(videoId);
+
+//     var clickWord = function() {
+//       var wordStartTime = this.getAttribute("startTime");
+//     transcriptVideo.currentTime= wordStartTime ;
+//     transcriptVideo.play();
+//     // console.log(attribute);
+//   };
+//   //adds event listener to all words/span tags in transcript
+//   for(var i=0;i<words.length;i++){
+//     words[i].addEventListener('click', clickWord, false);
+//   }
+
+// };
+
+// //initialised
+// makewordClickVideo('transcriptWords','transcriptVideo');
+// //////////////////////////
+
+
+}
+
+     </script>
+
+     <script type="text/javascript">
+
+    //  window.addEventListener("load", function(){
+
+       function makeDraggableDragula(left, right){
+
+         dragula([document.getElementById(left), document.getElementById(right)], {
+               copy: function(el, source) {
+                 return source === document.getElementById(left)
+               },
+               accepts: function(el, target) {
+                 return target !== document.getElementById(left)
+               },
+               removeOnSpill: false
+             }
+          ).on('drop', function (el) {
+            // el.className += ' ex-moved';
+            console.log(el)
+            //TODO: this is where the server or local storage needs to be updated with current version of   paperedit. so that that can be used to populate persistency layer
+          // var tempSelection =  document.getElementById("left");
+          // var spanWords = tempSelection.childNodes[0].childNodes;
+
+          $( "#left" ).replaceWith($("#left").children().children().unwrap());
+          });
+
+       }
+
+
+      //  makeDraggableDragula("left","right");
+
+
+    //  });;
+
+
+     </script>
+
+<script type="text/javascript">
+//EXPERIMENBT NOT WORKING
+function initialiseCliccableWords(){
+  var vid = document.getElementsByTagName("video")[0]
+
+
+var    words = document.getElementsByClassName("child");
+
+  for (var i=0; i<words.length; i++){
+    words[i].addEventListener("click",function(){
+      vid.currentTime = words[i].getAttribute("tcin");
+      console.log(words[i])
+      vid.play();
+
+    });
+  }
+
+}
+
+
+</script>
+
+
+</html>

@@ -1,0 +1,51 @@
+/**/
+
+
+
+article span {
+    /* margin: 2px; */
+    cursor: pointer;
+}
+
+article span.selected {
+    background-color: orange;
+    /* padding:  3px; */
+    /*  margin: 3px; */
+}
+article span.child {
+    /*  margin-left: 20px; */
+    padding: 2px;
+    color:grey;
+    display: inline;
+}
+
+
+article#paperedit {
+    border-style: solid;
+    border-color: lightblue;
+    border-width: 1px;
+
+}
+
+article#paperedit {
+    height: 65vh;
+    position: relative;
+    overflow: auto;
+}
+
+#player-canvas {
+    background:  black;
+}
+
+div#transcriptions article{
+    height: 70vh;
+    position: relative;
+    overflow: auto;
+}
+
+/*for video.html show page */
+div#oneTranscription article {
+	   height: 60vh;
+    position: relative;
+    overflow: auto;
+}

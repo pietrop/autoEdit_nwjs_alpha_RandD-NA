@@ -1,0 +1,33 @@
+{
+  "name": "autoedit_v2",
+  "version": "1.0.1",
+  "description": "second iteration of autoEdit desktop version OO aproach",
+  "main": "index.html",
+  "node-main": "./lib/nodemain.js",
+  "window": {
+    "fullscreen": false,
+    "show": true,
+    "icon": "btn.png",
+    "min_width": 480,
+    "min_height": 600,
+    "width": 900,
+    "height": 700,
+    "toolbar": false
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nw"
+  },
+  "author": "PP",
+  "license": "ISC",
+  "dependencies": {
+    "diskdb": "^0.1.14",
+    "ejs": "^2.3.4",
+    "fluent-ffmpeg": "^2.0.1",
+    "jquery": "^2.2.0",
+    "node-timecodes": "^2.1.4",
+    "nw": "^0.12.3",
+    "nwjs-osx-menu": "0.0.4",
+    "swig": "^1.4.2"
+  }
+}

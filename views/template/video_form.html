@@ -1,0 +1,115 @@
+
+<!-- form -->
+<form id="newVideoForm" class="form-horizontal">
+  <fieldset>
+    <legend>{{ title }} </legend>
+    <!-- video transcript name -->
+    <div class="form-group">
+      <label for="inputVideoTranscriptName" class="col-lg-2 control-label">Transcript Name</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputVideoTranscriptName" placeholder="Interview with">
+      </div>
+    </div>
+     <!-- Video File -->
+    <div class="form-group">
+      
+        <label for="videoFile" class="col-lg-2 control-label">Video File </label>
+         <div class="col-lg-10">
+        <input class="form-control" id="videoFile"type="file" onchange="readMetadata(this)" name="videoFile">
+        <span class="help-block">Video file</span>
+    	  </div>
+     
+    </div>
+    <!-- end optional srt -->
+    <hr>
+    <!-- video file name -->
+    <div class="form-group">
+      <label for="inputVideoFileName" class="col-lg-2 control-label">Video File Name</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputVideoFileName" placeholder="video.mov" disabled>
+      </div>
+    </div>
+
+    <!-- video REEL -->
+    <div class="form-group">
+      <label for="inputVideoReelName" class="col-lg-2 control-label">Video Reel Name</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputVideoReelName" placeholder="Card 1" disabled>
+      </div>
+    </div>
+    <!-- video Timecode -->
+    <div class="form-group">
+      <label for="inputVideoTimecode" class="col-lg-2 control-label">Video Timecode</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputVideoTimecode" placeholder="00:00:00:00" disabled>
+      </div>
+    </div>
+
+ <!-- video time_base  fps-->
+    <div class="form-group">
+      <label for="inputVideoTimebase" class="col-lg-2 control-label">Video fps</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputVideoTimebase" placeholder="1/24" disabled>
+      </div>
+    </div>
+
+    <!-- video date -->
+     <div class="form-group">
+      <label for="inputVideoDate" class="col-lg-2 control-label">Video Date</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputVideoDate" placeholder="04/12/2015" disabled>
+      </div>
+    </div>
+    <!-- video duration -->
+    <div class="form-group">
+      <label for="inputVideoDuration" class="col-lg-2 control-label">Video Duration (in seconds)</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputVideoDuration" placeholder="00:00:00:00" disabled>
+      </div>
+    </div>
+     <!-- end video duration -->
+     <hr>
+    <!-- add to paper edit -->
+    <div class="form-group">
+      <label for="select" class="col-lg-2 control-label">Add to Paper edit</label>
+      <div class="col-lg-10">
+        <select class="form-control" id="selectPaperEdit">
+           <option></option>
+          {%for paperedit in paperedits %}
+          <option value="{{ paperedit._id }}">{{ paperedit.name }}</option>
+          {% endfor %}
+        </select>
+    </div>
+    </div>
+    <!--  -->
+       <!-- Description -->
+    <div class="form-group">
+      <label for="textAreaVideoDescription" class="col-lg-2 control-label">Description</label>
+      <div class="col-lg-10">
+        <textarea class="form-control" rows="3" id="textAreaVideoDescription"></textarea>
+        <span class="help-block">Video Description or notes</span>
+      </div>
+    </div>
+    <!-- end Description -->
+    <!-- optional Srt -->
+    <div class="form-group">
+     
+        <label for="fileSrt" class="col-lg-2 control-label">Srt file</label>
+         <div class="col-lg-10">
+        <input class="form-control" id="srtFile"type="file" name="srt">
+        <span class="help-block">Optional Srt file</span>
+    	  </div>
+  
+    </div>
+    <!-- end optional srt -->
+    <!--  -->
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <a  class="btn btn-primary" onclick="saveVideo(this)">Save</a>
+      </div>
+    </div>
+  </fieldset>
+</form>
+<!-- end form -->
+
+

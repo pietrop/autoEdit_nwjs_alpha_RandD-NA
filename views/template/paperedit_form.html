@@ -1,0 +1,44 @@
+
+<form class="form-horizontal">
+		  <fieldset>
+		    <legend>{{ title }} </legend>
+		    <!-- PaperEdit Name -->
+		    <div class="form-group">
+      <label for="inputPaperEditName" class="col-lg-2 control-label">Name</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="inputPaperEditName" placeholder="PaperEdit v1">
+      </div>
+    </div>
+    <!-- End PaperEdit Name -->
+    <!-- Description -->
+    <div class="form-group">
+      <label for="textArea" class="col-lg-2 control-label">Description</label>
+      <div class="col-lg-10">
+        <textarea class="form-control" rows="3" id="textAreaPapereditDescription"></textarea>
+        <span class="help-block">PaperEdit Description or notes</span>
+      </div>
+    </div>
+    <!-- end Description -->
+    <!-- Select transcriptions -->
+    <div class="form-group">
+      <label for="select" class="col-lg-2 control-label">Selects</label>
+      <div class="col-lg-10">
+        <select multiple="" id="selectVideos" class="form-control">
+     
+           {%for video in videos %}
+          <option value="{{ video._id }}">{{ video.name }}</option>
+           {% endfor %}    
+        </select>
+         <span class="help-block"><code>cmd</code> + <code>click</code> to unselect</span>
+      </div>
+    </div>
+    <!-- end Select transcriptions -->
+      <!--  -->
+    <div class="form-group">
+      <div class="col-lg-10 col-lg-offset-2">
+        <a  class="btn btn-primary" onclick="savePaperEdit(this)">Save</a>
+      </div>
+    </div>
+  </fieldset>
+</form>
+<!-- end form -->

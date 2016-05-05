@@ -1,0 +1,31 @@
+<h1>{{ title }}</h1>
+
+{% for paperedit in paperedits %}
+<div class="media">
+  <div class="media-left">
+    <!-- <a href="#"> -->
+      <!-- <img class="media-object" src="http://placehold.it/64x64" alt="..."> -->
+     
+       <a href="#" id="{{ paperedit._id }}" onclick="papereditShow(this)"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a>
+ <!--    </a> -->
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">
+    <a href="#" id="{{ paperedit._id }}" onclick="papereditShow(this)">{{ paperedit.name }}</a></h4>
+    {{ paperedit.description }}<br>
+
+ <br>
+    
+     
+  </div>
+  
+</div>{% endfor %}
+
+<!-- 
+<ul>
+{% for element in list %}
+  <li>
+    {{ element.name }}
+  </li>
+{% endfor %}
+</ul> -->

@@ -1,0 +1,13 @@
+TITLE: sample EDL
+FCM: NON-DROP FRAME
+
+001  aReel N AA/V  C        00:00:44:10 00:00:49:05 00:00:00:00 00:00:04:20
+* FROM CLIP NAME:  ./media/video_HD2.ogg
+* COMMENT: 
+FINAL CUT PRO REEL: aReel Name longer then 7 characthers REPLACED BY: aReel N
+
+002  aReel N AA/V  C        00:00:17:13 00:00:20:19 00:00:04:20 00:00:08:01
+* FROM CLIP NAME:  ./media/debate_test.ogg
+* COMMENT: 
+FINAL CUT PRO REEL: aReel Name longer then 7 characthers REPLACED BY: aReel N
+
